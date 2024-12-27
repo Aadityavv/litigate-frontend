@@ -1,6 +1,7 @@
-import { NextResponse } from "next/server";
+import { connectToDatabase } from "../../../../lib/db";
 
 export async function GET(req) {
-  const securitySettings = { twoFactorEnabled: true };
-  return NextResponse.json(securitySettings);
+    const { db } = await connectToDatabase();
+    const securitySettings = await db.collection("settings").findOne({ type: "security" });
+    return NextResponse.json(securitySettings);
 }

@@ -1,22 +1,7 @@
-import { NextResponse } from "next/server";
+import { connectToDatabase } from "../../../../lib/db";
 
 export async function GET(req) {
-  // Simulated database query for bookmarked items
-  const bookmarkedResources = [
-    {
-      id: 1,
-      title: "Landmark Case: Roe v. Wade",
-      description: "A significant decision on constitutional rights.",
-      bookmarkedAt: "2024-12-01",
-    },
-    {
-      id: 2,
-      title: "Statutory Interpretation of Contract Law",
-      description: "Analyzing key provisions under the Indian Contract Act.",
-      bookmarkedAt: "2024-12-20",
-    },
-  ];
-
-  // Return response with bookmarked items
-  return NextResponse.json(bookmarkedResources);
+    const { db } = await connectToDatabase();
+    const bookmarkedResources = await db.collection("bookmarks").find().toArray();
+    return NextResponse.json(bookmarkedResources);
 }

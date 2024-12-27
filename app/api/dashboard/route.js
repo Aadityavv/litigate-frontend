@@ -1,11 +1,7 @@
-import { NextResponse } from "next/server";
+import { connectToDatabase } from "../../../../lib/db";
 
 export async function GET(req) {
-  const dashboardData = {
-    statistics: { cases: 42, documents: 120, insights: 10 },
-    recentActivities: [
-      { id: 1, activity: "Updated Case 123", timestamp: "2024-12-23" },
-    ],
-  };
-  return NextResponse.json(dashboardData);
+    const { db } = await connectToDatabase();
+    const dashboardData = await db.collection("dashboard").findOne({});
+    return NextResponse.json(dashboardData);
 }

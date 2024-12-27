@@ -1,9 +1,12 @@
-import { NextResponse } from "next/server";
+import { connectToDatabase } from "../../../../lib/db";
 
 export async function PUT(req) {
-  const preferences = await req.json();
-  return NextResponse.json({
-    message: "Preferences updated successfully",
-    updatedPreferences: preferences,
-  });
+    const { db } = await connectToDatabase();
+    const preferences = await req.json();
+    const result = await db.collection("settings").updateOne(
+        { type: "preferences" },
+        { $set: preferences },
+        { upsert: true }
+    );
+    return NextResponse.json({ message: "Preferences updated successfully", result });
 }

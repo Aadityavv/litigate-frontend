@@ -1,16 +1,14 @@
-import { NextResponse } from "next/server";
+import { connectToDatabase } from "../../../../lib/db";
 
 export async function GET(req) {
-  const feedbackList = [
-    { id: 1, message: "Great app!", timestamp: "2024-12-20" },
-  ];
-  return NextResponse.json(feedbackList);
+    const { db } = await connectToDatabase();
+    const feedbackList = await db.collection("feedback").find().toArray();
+    return NextResponse.json(feedbackList);
 }
 
 export async function POST(req) {
-  const feedback = await req.json();
-  return NextResponse.json({
-    message: "Feedback submitted successfully",
-    feedback,
-  });
+    const { db } = await connectToDatabase();
+    const feedback = await req.json();
+    const result = await db.collection("feedback").insertOne(feedback);
+    return NextResponse.json({ message: "Feedback submitted successfully", result });
 }

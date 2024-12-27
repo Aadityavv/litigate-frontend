@@ -1,9 +1,7 @@
-import { NextResponse } from "next/server";
+import { connectToDatabase } from "../../../../lib/db";
 
 export async function GET(req) {
-  const notifications = [
-    { id: 1, message: "New document uploaded", timestamp: "2024-12-22" },
-    { id: 2, message: "Case 456 updated", timestamp: "2024-12-23" },
-  ];
-  return NextResponse.json(notifications);
+    const { db } = await connectToDatabase();
+    const notifications = await db.collection("notifications").find().toArray();
+    return NextResponse.json(notifications);
 }
