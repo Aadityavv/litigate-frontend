@@ -1,6 +1,8 @@
-import { NextResponse } from "next/server";
+import { connectToDatabase } from "../../../../lib/db";
 
 export async function POST(req) {
-  const caseDetails = await req.json();
-  return NextResponse.json({ message: "Case created successfully", caseDetails });
+    const { db } = await connectToDatabase();
+    const caseDetails = await req.json();
+    const result = await db.collection("cases").insertOne(caseDetails);
+    return NextResponse.json({ message: "Case created successfully", result });
 }

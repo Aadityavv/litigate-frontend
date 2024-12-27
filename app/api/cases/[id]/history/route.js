@@ -1,10 +1,8 @@
-import { NextResponse } from "next/server";
+import { connectToDatabase } from "../../../../../lib/db";
 
 export async function GET(req, { params }) {
-  const { id } = params;
-  const history = [
-    { timestamp: "2024-12-20", action: "Case created" },
-    { timestamp: "2024-12-21", action: "Document added" },
-  ];
-  return NextResponse.json({ caseId: id, history });
+    const { db } = await connectToDatabase();
+    const { id } = params;
+    const history = await db.collection("history").find({ caseId: id }).toArray();
+    return NextResponse.json({ caseId: id, history });
 }
